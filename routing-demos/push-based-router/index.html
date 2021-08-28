@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Push Based Router</title>
+</head>
+
+<body>
+    <h1>Push Based Router</h1>
+    <nav id="navigation">
+        <a href="/home">Home</a>
+        <a href="/products">Products</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/about-us">About</a>
+    </nav>
+
+    <div class="root"></div>
+
+    <script>
+        const routes = {
+            '/home': `<div><h2>Home</h2><p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi beatae ad ex similique non nobis quidem ea molestias mollitia enim.</p></div>`,
+            '/products': `<div><h2>Products Page</h2><p>Some products here!</p></div>`,
+            '/pricing': `<div><h2>Pricing Page</h2><p>Our prices</p></div>`,
+            '/about-us': `<div><h2>About us Page</h2><p>About us info</p></div>`,
+        };
+
+        updateContent(location.pathname == '/' ? '/home' : location.pathname);
+
+        document.getElementById('navigation').addEventListener('click', (e) => {
+            if (e.target.tagName == 'A') {
+                e.preventDefault();
+
+                navigate(e.target.href);
+            }
+        });
+
+        window.addEventListener('popstate', (e) => {
+            updateContent(location.pathname);
+        });
+
+        function updateContent(pathname) {
+            let rootElement = document.querySelector('.root');
+
+            rootElement.innerHTML = routes[pathname];
+        }
+
+        function navigate(url) {
+            history.pushState({}, '', url);
+
+            let popStateEvent = new PopStateEvent('popstate');
+            dispatchEvent(popStateEvent);
+        }
+    </script>
+</body>
+
+</html>
